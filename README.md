@@ -1,5 +1,6 @@
-# foodie
-final project
+# foodie 
+![](https://i.imgur.com/CiD8I4p.png)
+![](https://i.imgur.com/QUb1stC.png)
 ## Member information
 
 __1.__ Yung-Wei Teng
