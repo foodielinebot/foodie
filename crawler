@@ -1,0 +1,69 @@
+import datetime
+from msilib.schema import Control
+import time
+from xml.etree.ElementPath import xpath_tokenizer
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+from abc import ABC, abstractmethod
+from selenium import webdriver
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.keys import Keys
+from html import *
+
+s = Service(r'C:\Users\user\Downloads\geckodriver.exe')
+browser = webdriver.Firefox(service = s) #executable_path=r'C:\Users\Yvette\Downloads\geckodriver-v0.30.0-win64\geckodriver.exe'
+
+def main():
+    restaurants = browser.find_elements(By.CLASS_NAME,'jsx-2740740998.title-text') # 餐廳名稱
+    stars = browser.find_elements(By.CLASS_NAME,'jsx-1207467136.text')             # 餐廳星級
+    costs = browser.find_elements(By.CLASS_NAME,'jsx-2740740998.avg-price')        # 餐廳均消
+    addresses = browser.find_elements(By.CLASS_NAME,'jsx-2740740998.address-row')  # 餐廳地址
+
+    df = pd.DataFrame() #columns = ['Restaurant', 'Stars', 'Avg_Price', 'Address']
+
+    Rest = list()
+    Stars = list()
+    Costs = list()
+    Address = list()
+
+    for restaurant in restaurants:
+        Rest.append(restaurant.text)
+    for star in stars:    
+        Stars.append(star.text)
+    for cost in costs:    
+        Costs.append(cost.text)
+    for address in addresses:    
+        Address.append(address.text)
+
+    df.insert(0, 'Restaurant', Rest)
+    #df.insert(1, 'Stars', Stars)
+    #df.insert(2, 'Avg_Price', Costs)
+    df.insert(1, 'Address', Address)
+    return df
+
+output = pd.DataFrame()
+
+for i in range(1, 6):
+    #url = 'https://ifoodie.tw/explore/新北市/三峽區/list?sortby=recent&page=' + str(i)
+    url = 'https://ifoodie.tw/explore/list?sortby=recent&place=北大特區&latlng=24.946319580078125%2C121.37539672851562&page='+ str(i)
+    browser.get(url)
+    time.sleep(3)
+    output = output.append(main())
+
+print(output)
+output.to_csv(r'C:\Users\user\Desktop\Foodie_Database.csv')
+database = output.to_dict()
+print(database)
+
+with open('Foodie_Database.txt','w') as f: 
+    f.write(str(database))
+
+'''
+    #將取得的餐廳名稱、評價及地址連結一起，並且指派給content變數
+    content += f"{title} \n{stars}顆星 \n{cost} \n{address} \n\n"
+
+print(content)
+'''
