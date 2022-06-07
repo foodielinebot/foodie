@@ -1,7 +1,7 @@
 # foodie 
 ![](https://i.imgur.com/CiD8I4p.png)
 ![](https://i.imgur.com/QUb1stC.png)
-## Member information
+## About us
 
 __1.__ Yung-Wei Teng
 __E-mail:__ viviansophie2006@gmail.com
